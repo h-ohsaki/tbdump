@@ -1,6 +1,6 @@
 # tbdump Package
 
-tbdump - display useful information for debbugging in case of errors
+tbdump - display helpful information for debbugging in case of errors/exceptions
 
 # DESCRIPTION
 
@@ -24,6 +24,8 @@ commands.
 
 By default, Python tells little about the error.
 
+test.py:
+
 ```python
 import sys
 from collections import namedtuple
@@ -34,13 +36,16 @@ y = Record('Mike', 2018, 456)
 ```
 
 ```sh
+$ python3 test.py
 Traceback (most recent call last):
-  File "/tmp/4.py", line 8, in <module>
+  File "test.py", line 6, in <module>
     y = Record('Mike', 2018, 456)
 TypeError: __new__() missing 1 required positional argument: 'note'
 ```
 
 With **tbdump**, you can have details.
+
+test-tbdump.py:
 
 ```python
 import sys
@@ -54,7 +59,8 @@ y = Record('Mike', 2018, 456)
 ```
 
 ```sh
----- <module> /tmp/4.py
+$ python3 test-tbdump.py
+---- <module> test-tbdump.py
     4 import tbdump
     5 
     6 Record = namedtuple('Record', 'name year size note')
@@ -111,7 +117,7 @@ y = Record('Mike', 2018, 456)
             __spec__ = None
 TypeError: __new__() missing 1 required positional argument: 'note'
 
-> /tmp/4.py(8)<module>()
+> test-tbdump.py(8)<module>()
 -> y = Record('Mike', 2018, 456)
 (Pdb) 
 ```
