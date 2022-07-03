@@ -101,13 +101,6 @@ def print_tb(tb, nlines=5, ncols=80):
                 val_str = trimmed_str(repr(attr[key]), ncols - 28)
                 _print(key_str, val_str)
 
-def reset_tty():
-    if 'curses' in sys.modules:
-        import curses
-        curses.echo()
-        curses.nocbreak()
-        curses.endwin()
-
 def print_exc(etype, value, tb):
     """Exception handler based on the code in O'Reilly's Python cookbook.
     This function receives the same arguments with traceback.print_exc: i.e.,
@@ -117,7 +110,6 @@ def print_exc(etype, value, tb):
     elif issubclass(etype, BrokenPipeError):
         sys.__excepthook__(etype, value, tb)
     else:
-        reset_tty()
         # dump all frames
         while True:
             print_tb(tb)
