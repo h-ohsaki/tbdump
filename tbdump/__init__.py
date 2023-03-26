@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 #
 # Display helpful information for debbugging in case of errors/exceptions.
-# Copyright (c) 2018-2019, Hiroyuki Ohsaki.
+# Copyright (c) 2018-2023, Hiroyuki Ohsaki.
 # All rights reserved.
-#
-# $Id: tbdump.py,v 1.13 2018/09/23 13:19:40 ohsaki Exp ohsaki $
 #
 
 # This program is free software: you can redistribute it and/or modify
@@ -26,6 +24,8 @@ import sys
 import traceback
 
 import ansiterm as at
+
+MODULES_TO_HIDE = ['__builtins__']
 
 def _print(*args, **kwargs):
     print(*args, **kwargs, file=sys.stderr)
@@ -82,10 +82,7 @@ def print_tb(tb, nlines=5, ncols=80):
     keys = sorted(f.f_locals.keys(), key=_by_location)
     for key in keys:
         key_str = at.yellow('{:>20}'.format(key))
-        if key in set([
-                'linecache', 'pdb', 'sys', 'os', 're', 'ansiterm', 'traceback',
-                '__builtins__', 'math', 'numpy', 'tbdump', 'pygame',
-        ]):
+        if key in sys.modules or key in MODULES_TO_HIDE:
             _print(key_str, '= ...')
             continue
         else:
