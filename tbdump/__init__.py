@@ -46,18 +46,18 @@ def print_tb(tb, nlines=5, ncols=80):
     filename = co.co_filename
     name = co.co_name
 
-    # display frame header
+    # Display frame header.
     name_str = at.blue(name, True)
     filename_str = at.green(filename)
     _print('----', name_str, filename_str)
 
-    # display source lines
+    # Display source lines.
     linecache.checkcache(filename)
     errline = ''
     for n in range(lineno - nlines + 1, lineno + 1):
         line = linecache.getline(filename, n, f.f_globals).rstrip()
         if line is not None:
-            lineno_str = at.gray('{:5} '.format(n))
+            lineno_str = at.magenta('{:5} '.format(n))
             _print(lineno_str, end='')
             if n == lineno:
                 line_str = at.red(line)
@@ -69,16 +69,16 @@ def print_tb(tb, nlines=5, ncols=80):
     def _by_location(key):
         pos = errline.find(key)
         if 0 <= pos <= 255:
-            # keys matching the error line come first
+            # Keys matching the error line come first.
             return chr(pos)
         elif key.startswith('__'):
-            # keys starting with __ come last
+            # Keys starting with __ come last.
             return '~' + key
         else:
-            # sorted in the alphabetical order
+            # Sorted in the alphabetical order.
             return key
 
-    # dump all local variables in the frame
+    # Dump all local variables in the frame.
     keys = sorted(f.f_locals.keys(), key=_by_location)
     for key in keys:
         key_str = at.yellow('{:>20}'.format(key))
@@ -89,7 +89,7 @@ def print_tb(tb, nlines=5, ncols=80):
             val_str = trimmed_str(repr(f.f_locals[key]), ncols - 20)
             _print(key_str, '=', val_str)
 
-        # dump all attributes for objects
+        # Dump all attributes for objects.
         attr = getattr(f.f_locals[key], '__dict__', None)
         if attr:
             keys = sorted(attr.keys(), key=_by_location)
@@ -107,27 +107,27 @@ def print_exc(etype, value, tb):
     elif issubclass(etype, BrokenPipeError):
         sys.__excepthook__(etype, value, tb)
     else:
-        # dump all frames
+        # Dump all frames.
         while True:
             print_tb(tb)
             tb = tb.tb_next
             if not tb:
                 break
 
-        # display info on exception
+        # Display info on exception.
         lines = traceback.format_exception_only(etype, value)
         for line in lines:
             _print(at.red(line))
 
-        # invoke debugger if possible
+        # Invoke debugger if possible.
         if sys.stderr.isatty() and sys.stdin.isatty():
             pdb.pm()
 
-# override the exception hook
+# Override the exception hook.
 sys.excepthook = print_exc
 
 def main():
-    # intentionally raise NameError
+    # Intentionally raise NameError.
     print(x)
 
 if __name__ == "__main__":
